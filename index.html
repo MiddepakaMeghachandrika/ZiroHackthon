@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090d1a">
+<title>RevalAI | Academic Intelligence</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #090d1a;
+  --panel: #11182a;
+  --panel2: #161f34;
+  --border: rgba(255,255,255,.09);
+  --text: #f4f5fb;
+  --muted: #929bb3;
+  --gold: #e9c783;
+  --gold2: #f7e4b7;
+  --violet: #8b83ff;
+  --green: #52d6a0;
+  --red: #ff7d91;
+  --blue: #70b5ff;
+  --shadow: 0 25px 80px rgba(0,0,0,.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at 10% 0%, #222454 0, transparent 38%),
+    radial-gradient(ellipse at 90% 100%, #2c1e40 0, transparent 36%);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 43px;
+  height: 43px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 20px;
+  color: #151322;
+  background: linear-gradient(135deg, var(--gold2), #bd9653);
+  box-shadow: 0 5px 24px #e9c78325;
+}
+
+.brand-name {
+  font: 800 19px Manrope, sans-serif;
+  letter-spacing: -.7px;
+}
+
+.brand-sub {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.gold {
+  color: var(--gold);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 12px;
+}
+
+button.primary {
+  border: 0;
+  border-radius: 11px;
+  padding: 13px 17px;
+  background: linear-gradient(120deg, var(--gold2), #d9b46f);
+  color: #191729;
+  font-weight: 800;
+  transition: transform .2s, filter .2s;
+}
+
+button.primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+button.secondary {
+  border: 1px solid var(--border);
+  background: #ffffff08;
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px 13px;
+  transition: border-color .2s, background .2s;
+}
+
+button.secondary:hover {
+  border-color: #e9c78380;
+  background: #ffffff0c;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  background: #0b1120;
+  border: 1px solid #303951;
+  color: var(--text);
+  border-radius: 11px;
+  padding: 13px;
+  outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px #e9c78315;
+}
+
+textarea {
+  min-height: 105px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.ai-answer {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.8;
+  background: #0b1120;
+  border: 1px solid #303951;
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+.ai-status {
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 10px;
+  color: var(--gold);
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  color: #b8c0d3;
+  margin-bottom: 8px;
+}
+
+.field {
+  margin-bottom: 17px;
+}
+
+#loginPage {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.login-layout {
+  width: min(1000px, 100%);
+  display: grid;
+  grid-template-columns: 1fr 410px;
+  border: 1px solid var(--border);
+  border-radius: 25px;
+  overflow: hidden;
+  background: #11182bd9;
+  box-shadow: var(--shadow);
+}
+
+.login-hero {
+  padding: 50px 42px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 580px;
+  background: linear-gradient(145deg, #171d37, #111526);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-hero::after {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  right: -100px;
+  bottom: -100px;
+  border: 1px solid #e9c78330;
+  box-shadow:
+    0 0 0 35px #e9c78308,
+    0 0 0 75px #e9c78305;
+  pointer-events: none;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.hero-title {
+  font: 800 clamp(35px, 4vw, 51px)/1.13 Manrope, sans-serif;
+  letter-spacing: -2px;
+  margin: 20px 0;
+}
+
+.hero-copy {
+  max-width: 390px;
+  color: #aeb6cc;
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+.hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 30px;
+}
+
+.pill {
+  font-size: 11px;
+  padding: 9px 12px;
+  border-radius: 30px;
+  background: #ffffff08;
+  border: 1px solid var(--border);
+}
+
+.login-card {
+  padding: 43px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-card h2 {
+  font: 800 25px Manrope, sans-serif;
+  margin: 0 0 9px;
+}
+
+#loginMessage {
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 13px;
+  color: var(--red);
+}
+
+.demo-note {
+  padding: 13px;
+  border: 1px solid #e9c78330;
+  background: #e9c7830b;
+  border-radius: 12px;
+  font-size: 11px;
+  line-height: 1.8;
+  color: #c7c9d7;
+  margin-top: 22px;
+}
+
+.demo-note strong {
+  color: var(--gold);
+}
+
+#app {
+  min-height: 100vh;
+}
+
+.topbar {
+  min-height: 76px;
+  border-bottom: 1px solid var(--border);
+  background: #090d1ad9;
+  backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px clamp(18px, 4vw, 55px);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 12px;
+  color: var(--gold);
+  background: #e9c78315;
+  border: 1px solid #e9c78335;
+  font-weight: 800;
+}
+
+.layout {
+  max-width: 1380px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 225px 1fr;
+  gap: 27px;
+  padding: 28px clamp(16px, 3vw, 40px);
+}
+
+.sidebar {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+}
+
+.side-label {
+  font-size: 10px;
+  letter-spacing: 1.8px;
+  color: #66718c;
+  margin: 14px 12px;
+}
+
+.nav-btn {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: #a9b2c9;
+  text-align: left;
+  margin: 4px 0;
+  font-size: 13px;
+  transition: .2s;
+}
+
+.nav-btn:hover {
+  background: #ffffff06;
+}
+
+.nav-btn.active {
+  background: linear-gradient(90deg, #e9c78319, #8b83ff0c);
+  border-color: #e9c78325;
+  color: var(--gold2);
+}
+
+.nav-icon {
+  width: 22px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.content {
+  min-width: 0;
+}
+
+.page-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15px;
+  margin: 5px 0 25px;
+}
+
+h1 {
+  font: 800 clamp(23px, 3vw, 31px) Manrope, sans-serif;
+  letter-spacing: -1px;
+  margin: 0 0 8px;
+}
+
+h2,
+h3 {
+  font-family: Manrope, sans-serif;
+}
+
+.card {
+  background: linear-gradient(145deg, #151d31ed, #101627ed);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  padding: 21px;
+  box-shadow: 0 12px 30px #00000012;
+}
+
+.grid4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 19px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.stat-value {
+  font: 800 29px Manrope, sans-serif;
+  margin: 14px 0 8px;
+  letter-spacing: -1px;
+}
+
+.stat-foot {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.stat-symbol {
+  float: right;
+  font-size: 18px;
+  color: var(--gold);
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.section-head h3 {
+  font-size: 15px;
+  margin: 0;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 17px;
+  margin-bottom: 18px;
+}
+
+.semester-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.sem-btn {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 9px 13px;
+  background: #ffffff05;
+  color: #aeb6cb;
+  font-size: 12px;
+}
+
+.sem-btn.active {
+  color: #181426;
+  background: var(--gold);
+  border-color: var(--gold);
+  font-weight: 800;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+th {
+  text-align: left;
+  color: #8590ab;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .7px;
+  text-transform: uppercase;
+}
+
+th,
+td {
+  padding: 15px 11px;
+  border-bottom: 1px solid #ffffff0b;
+}
+
+tbody tr:hover {
+  background: #ffffff04;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.status {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.pass {
+  color: var(--green);
+  background: #52d6a014;
+}
+
+.fail {
+  color: var(--red);
+  background: #ff7d9114;
+}
+
+.pending {
+  color: var(--gold);
+  background: #e9c78314;
+}
+
+.grade {
+  font-weight: 800;
+  color: var(--gold2);
+}
+
+.progress {
+  height: 6px;
+  background: #ffffff0c;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 13px;
+}
+
+.progress span {
+  height: 100%;
+  display: block;
+  background: linear-gradient(90deg, var(--violet), var(--gold));
+  border-radius: 20px;
+}
+
+.sem-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.mini {
+  background: #ffffff04;
+  border: 1px solid var(--border);
+  padding: 13px;
+  border-radius: 12px;
+  min-width: 0;
+}
+
+.mini b {
+  display: block;
+  font: 700 18px Manrope, sans-serif;
+  margin-top: 8px;
+  overflow-wrap: anywhere;
+}
+
+.subject-select {
+  width: 17px;
+  height: 17px;
+  accent-color: #d9b46f;
+}
+
+.reval-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  padding-top: 19px;
+  border-top: 1px solid var(--border);
+}
+
+.fee {
+  font: 800 26px Manrope, sans-serif;
+  color: var(--gold2);
+}
+
+.notice {
+  border: 1px solid #8b83ff35;
+  background: #8b83ff0d;
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1.8;
+  color: #b9c2d9;
+  margin-bottom: 17px;
+}
+
+#toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  max-width: min(360px, calc(100vw - 40px));
+  padding: 15px 18px;
+  background: #1b2940;
+  border: 1px solid #e9c78355;
+  border-radius: 12px;
+  box-shadow: 0 15px 50px #0006;
+  z-index: 20;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.footer {
+  padding: 20px 0 5px;
+  text-align: center;
+  font-size: 10px;
+  color: #68738e;
+}
+
+@media (max-width: 950px) {
+  .login-layout {
+    grid-template-columns: 1fr 360px;
+  }
+
+  .login-hero {
+    padding: 35px 27px;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+  }
+
+  .side-label {
+    display: none;
+  }
+
+  .nav-btn {
+    width: auto;
+    white-space: nowrap;
+    margin: 0;
+  }
+
+  .grid4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .login-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .login-hero {
+    min-height: 300px;
+    padding: 28px;
+  }
+
+  .login-card {
+    padding: 30px 24px;
+  }
+
+  .hero-title {
+    font-size: 36px;
+  }
+
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .grid4 {
+    gap: 10px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .stat-value {
+    font-size: 25px;
+  }
+
+  .topbar {
+    padding: 12px 15px;
+  }
+
+  .brand-name {
+    font-size: 16px;
+  }
+
+  .topbar .brand-sub {
+    display: none;
+  }
+
+  .top-actions .user-label {
+    display: none;
+  }
+
+  .sem-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .page-heading {
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="ambient"></div>
+
+<!-- LOGIN SCREEN -->
+<section id="loginPage">
+  <div class="login-layout">
+    <div class="login-hero">
+      <div class="brand">
+        <div class="logo">R</div>
+        <div>
+          <div class="brand-name">Reval<span class="gold">AI</span></div>
+          <div class="brand-sub">ACADEMIC INTELLIGENCE</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="eyebrow">Your academic companion</div>
+        <div class="hero-title">Clarity for<br>every <span class="gold">result.</span></div>
+        <p class="hero-copy">
+          One private space for your academic journey. Explore semester
+          performance, understand your results, and manage revaluation
+          requests with confidence.
+        </p>
+        <div class="hero-pills">
+          <span class="pill">✦ Semester insights</span>
+          <span class="pill">◈ Student dashboard</span>
+          <span class="pill">↗ Revaluation tracking</span>
+        </div>
+      </div>
+
+      <div class="small muted">BUILT FOR STUDENTS · DEMO EDITION 2026</div>
+    </div>
+
+    <div class="login-card">
+      <div class="eyebrow">STUDENT PORTAL</div>
+      <h2 style="margin-top:13px">Welcome back</h2>
+      <p class="muted small" style="line-height:1.7;margin:0 0 27px">
+        Sign in to access your personal academic dashboard.
+      </p>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="hallTicket">HALL TICKET NUMBER</label>
+          <input
+            id="hallTicket"
+            autocomplete="username"
+            placeholder="e.g. DEMO2026001"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="pin">ACCESS PIN</label>
+          <input
+            id="pin"
+            type="password"
+            inputmode="numeric"
+            autocomplete="current-password"
+            placeholder="Enter your PIN"
+            required
+          >
+        </div>
+
+        <button
+          class="primary"
+          id="loginBtn"
+          type="submit"
+          style="width:100%;margin-top:6px"
+        >
+          Sign in to dashboard ↗
+        </button>
+
+        <div id="loginMessage" role="status"></div>
+      </form>
+
+      <div class="demo-note">
+        <strong>DEMO ACCESS</strong><br>
+        Hall ticket: DEMO2026001<br>
+        PIN: 1001<br>
+        <span class="muted">
+          Synthetic records only. This demo is not an official university portal.
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDENT DASHBOARD -->
+<section id="app" class="hidden">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">R</div>
+      <div>
+        <div class="brand-name">Reval<span class="gold">AI</span></div>
+        <div class="brand-sub">STUDENT DASHBOARD</div>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <div class="avatar" id="avatar">D</div>
+      <div class="user-label">
+        <div id="topName" style="font-size:12px;font-weight:700">Student</div>
+        <div id="topTicket" class="small muted">Hall ticket</div>
+      </div>
+      <button class="secondary" id="logoutBtn" type="button">Log out</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav-btn active" data-page="overview" type="button">
+        <span class="nav-icon">◫</span> Overview
+      </button>
+      <button class="nav-btn" data-page="results" type="button">
+        <span class="nav-icon">▤</span> Semester results
+      </button>
+      <button class="nav-btn" data-page="revaluation" type="button">
+        <span class="nav-icon">◈</span> Revaluation
+      </button>
+    </aside>
+
+    <main class="content">
+      <div class="page-heading">
+        <div>
+          <div class="eyebrow" id="pageEyebrow">ACADEMIC OVERVIEW</div>
+          <h1 id="pageTitle">Your academic journey</h1>
+          <div class="muted small" id="pageSubtitle">
+            A clear view of your progress, semester by semester.
+          </div>
+        </div>
+        <span class="pill">✦ Demo student portal</span>
+      </div>
+
+      <!-- OVERVIEW PAGE -->
+      <div id="overviewPage">
+        <div class="grid4">
+          <div class="card">
+            <span class="stat-symbol">◈</span>
+            <div class="stat-label">Semesters</div>
+            <div class="stat-value" id="statSems">6</div>
+            <div class="stat-foot">Academic records</div>
+          </div>
+
+          <div class="card">
+            <span class="stat-symbol">✦</span>
+            <div class="stat-label">Average SGPA</div>
+            <div class="stat-value" id="statSgpa">—</div>
+            <div class="stat-foot">Across available semesters</div>
+          </div>
+
+          <div class="card">
+            <span class="stat-symbol">↗</span>
+            <div class="stat-label">Average marks</div>
+            <div class="stat-value" id="statAverage">—</div>
+            <div class="stat-foot">Out of 100</div>
+          </div>
+
+          <div class="card">
+            <span class="stat-symbol">✓</span>
+            <div class="stat-label">Subjects passed</div>
+            <div class="stat-value" id="statPassed">—</div>
+            <div class="stat-foot" id="statSubjectCount">Across all semesters</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="section-head">
+              <h3>Semester performance</h3>
+              <span class="small muted">SGPA</span>
+            </div>
+            <div id="performanceList"></div>
+          </div>
+
+          <div class="card">
+            <div class="section-head">
+              <h3>Student profile</h3>
+              <span class="gold">✦</span>
+            </div>
+            <div class="mini">
+              <span class="small muted">Student name</span>
+              <b id="profileName" style="font-size:16px">—</b>
+            </div>
+            <div class="mini" style="margin-top:10px">
+              <span class="small muted">Hall ticket</span>
+              <b id="profileTicket" style="font-size:14px">—</b>
+            </div>
+            <div class="mini" style="margin-top:10px">
+              <span class="small muted">Academic record</span>
+              <b style="font-size:14px">Semester 1–6</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:18px">
+          <div class="section-head">
+            <h3>Latest semester snapshot</h3>
+            <button class="secondary" data-goto="results" type="button">
+              View all results →
+            </button>
+          </div>
+          <div class="sem-summary" id="latestSummary"></div>
+        </div>
+
+        <!-- WORKFLOW 2: AI RESULT ASSISTANT -->
+        <div class="card">
+          <div class="section-head">
+            <h3>Ask RevalAI</h3>
+            <span class="small muted">AI Result Assistant</span>
+          </div>
+
+          <p class="muted small" style="line-height:1.8">
+            Ask about your semester marks, grades, failed subjects, or the
+            revaluation process. Answers are based on demo records and must
+            not be treated as official university advice.
+          </p>
+
+          <label for="aiQuestion">YOUR QUESTION</label>
+          <textarea
+            id="aiQuestion"
+            placeholder="Example: Explain my Semester 1 marks and identify any failed subjects."
+          ></textarea>
+
+          <button
+            class="primary"
+            id="askAiBtn"
+            type="button"
+            style="margin-top:12px"
+          >
+            Ask RevalAI ↗
+          </button>
+
+          <div id="aiStatus" class="ai-status" role="status"></div>
+          <div id="aiAnswer" class="ai-answer hidden"></div>
+        </div>
+      </div>
+
+      <!-- RESULTS PAGE -->
+      <div id="resultsPage" class="hidden">
+        <div class="card" style="margin-bottom:18px">
+          <div class="section-head">
+            <h3>Choose semester</h3>
+            <span class="small muted">Semesters 1–6</span>
+          </div>
+          <div class="semester-list" id="semesterButtons"></div>
+          <div id="semesterInfo" class="sem-summary"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-head">
+            <h3>Subject-wise marks</h3>
+            <span id="marksCount" class="small muted"></span>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Internal</th>
+                  <th>External</th>
+                  <th>Total</th>
+                  <th>Grade</th>
+                  <th>Result</th>
+                </tr>
+              </thead>
+              <tbody id="marksBody"></tbody>
+            </table>
+          </div>
+
+          <p class="small muted" style="line-height:1.7;margin:16px 0 0">
+            Grade and pass rules shown here are for demonstration.
+            Official calculations must follow your university's regulations.
+          </p>
+        </div>
+      </div>
+
+      <!-- REVALUATION PAGE -->
+      <div id="revaluationPage" class="hidden">
+        <div class="notice">
+          Select the semester and subjects you want to request for revaluation.
+          The amount displayed is a <strong>demo estimate of ₹1,000 per subject</strong>,
+          not an official fee. Submission and eligibility must be verified
+          against official university rules.
+        </div>
+
+        <div class="card">
+          <div class="section-head">
+            <h3>Choose semester</h3>
+            <span class="small muted">Select subjects below</span>
+          </div>
+
+          <div class="semester-list" id="revalSemesterButtons"></div>
+
+          <div class="section-head" style="margin-top:23px">
+            <h3>Available subjects</h3>
+            <span class="small muted" id="selectedCount">0 selected</span>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Select</th>
+                  <th>Subject</th>
+                  <th>Total</th>
+                  <th>Grade</th>
+                  <th>Result</th>
+                </tr>
+              </thead>
+              <tbody id="revalBody"></tbody>
+            </table>
+          </div>
+
+          <div class="reval-bottom">
+            <div>
+              <div class="small muted">Estimated total fee</div>
+              <div class="fee" id="feeTotal">₹0</div>
+              <div class="small muted">₹1,000 per selected subject</div>
+            </div>
+            <button class="primary" id="submitReval" type="button">
+              Submit demo request ↗
+            </button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <div class="section-head">
+            <h3>My revaluation requests</h3>
+            <span class="small muted">This browser session</span>
+          </div>
+          <div id="requestList" class="muted small">
+            No requests submitted yet.
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        REVALAI · ACADEMIC INTELLIGENCE · SYNTHETIC DEMO DATA
+      </div>
+    </main>
+  </div>
+</section>
+
+<div id="toast" class="hidden" role="status"></div>
+
+<script>
+/*
+  REVALAI FRONTEND — TWO MAIN N8N WORKFLOWS
+
+  Workflow 1 — Student Login + Results
+  POST http://localhost:5678/webhook/revalai-login
+
+  Workflow 2 — AI Result Assistant (Gemini)
+  POST http://localhost:5678/webhook/revalai-assistant
+
+  Optional Workflow — Revaluation Request
+  POST http://localhost:5678/webhook/revalai-revaluation
+
+  Activate the matching n8n workflows for live API use.
+*/
+
+const API_BASE = "http://localhost:5678/webhook";
+const USE_DEMO_FALLBACK = true;
+const DEMO_FEE_PER_SUBJECT = 1000;
+
+let currentStudent = null;
+let currentPin = "";
+let currentMarks = [];
+let currentSummaries = [];
+let selectedSemester = 1;
+let revalSemester = 1;
+let requests = [];
+
+const $ = id => document.getElementById(id);
+
+const escapeHTML = value =>
+  String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
+
+function notify(message) {
+  $("toast").textContent = message;
+  $("toast").classList.remove("hidden");
+
+  clearTimeout(notify.timer);
+
+  notify.timer = setTimeout(() => {
+    $("toast").classList.add("hidden");
+  }, 3500);
+}
+
+/* PAGE NAVIGATION */
+
+function showPage(page) {
+  ["overview", "results", "revaluation"].forEach(name => {
+    $(name + "Page").classList.toggle("hidden", name !== page);
+  });
+
+  document.querySelectorAll(".nav-btn").forEach(button => {
+    button.classList.toggle("active", button.dataset.page === page);
+  });
+
+  const titles = {
+    overview: [
+      "ACADEMIC OVERVIEW",
+      "Your academic journey",
+      "A clear view of your progress, semester by semester."
+    ],
+    results: [
+      "ACADEMIC RECORDS",
+      "Semester results",
+      "Review subject marks, grades and results."
+    ],
+    revaluation: [
+      "STUDENT SERVICES",
+      "Revaluation center",
+      "Create and track a demo revaluation request."
+    ]
+  };
+
+  [
+    $("pageEyebrow").textContent,
+    $("pageTitle").textContent,
+    $("pageSubtitle").textContent
+  ] = titles[page];
+}
+
+document.querySelectorAll(".nav-btn").forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.page));
+});
+
+document.querySelectorAll("[data-goto]").forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.goto));
+});
+
+/* DEMO DATA FOR 30 TEST STUDENTS */
+
+function buildDemoRecords(studentNumber) {
+  const subjectNames = [
+    "Programming",
+    "Mathematics",
+    "Database Systems",
+    "Computer Networks",
+    "Operating Systems"
+  ];
+
+  const marks = [];
+  const summaries = [];
+
+  for (let semester = 1; semester <= 6; semester++) {
+    const semesterRecords = [];
+
+    subjectNames.forEach((subjectName, index) => {
+      const internal =
+        12 + ((studentNumber * 3 + semester * 5 + index * 7) % 14);
+
+      const external =
+        20 + ((studentNumber * 7 + semester * 9 + index * 11) % 51);
+
+      const total = internal + external;
+      const passed = total >= 40 && external >= 20;
+
+      const grade = !passed ? "F"
+        : total >= 90 ? "A+"
+        : total >= 80 ? "A"
+        : total >= 70 ? "B"
+        : total >= 60 ? "C"
+        : total >= 50 ? "D"
+        : "E";
+
+      const points = {
+        "A+": 10,
+        "A": 9,
+        "B": 8,
+        "C": 7,
+        "D": 6,
+        "E": 5,
+        "F": 0
+      }[grade];
+
+      const record = {
+        semester,
+        subjectCode: `S${semester}${String(index + 1).padStart(2, "0")}`,
+        subjectName,
+        internal,
+        external,
+        total,
+        maxMarks: 100,
+        grade,
+        result: passed ? "PASS" : "FAIL",
+        points
+      };
+
+      marks.push(record);
+      semesterRecords.push(record);
+    });
+
+    summaries.push({
+      semester,
+      averageMarks: Number((
+        semesterRecords.reduce((sum, mark) => sum + mark.total, 0) /
+        semesterRecords.length
+      ).toFixed(1)),
+      sgpa: Number((
+        semesterRecords.reduce((sum, mark) => sum + mark.points, 0) /
+        semesterRecords.length
+      ).toFixed(2)),
+      overallResult: semesterRecords.every(
+        mark => mark.result === "PASS"
+      ) ? "PASS" : "REVIEW"
+    });
+  }
+
+  return { marks, summaries };
+}
+
+/* NORMALISE DATA RECEIVED FROM WORKFLOW 1 */
+function setStudentData(data) {
+  currentStudent = data.student;
+
+  const resultData = data.results || data.data?.results || data.data || {};
+  const rawMarks = resultData.marks || resultData.subjects || data.marks || [];
+  const rawSummaries = resultData.summaries || [];
+
+  function pick(record, keys) {
+    for (const key of keys) {
+      const value = record?.[key];
+      if (value !== undefined && value !== null && value !== "") {
+        return value;
+      }
+    }
+    return undefined;
+  }
+
+  currentMarks = rawMarks.map(mark => {
+    const internalRaw = pick(mark, [
+      "internal", "internal_marks", "internalMarks"
+    ]);
+
+    const externalRaw = pick(mark, [
+      "external", "external_marks", "externalMarks"
+    ]);
+
+    const totalRaw = pick(mark, [
+      "calculated_total", "calculatedTotal",
+      "total", "total_marks", "totalMarks", "marks_total"
+    ]);
+
+    const maxRaw = pick(mark, ["maxMarks", "max_marks"]);
+
+    const internal = Number(internalRaw ?? 0);
+    const external = Number(externalRaw ?? 0);
+    const maxMarks = Number(maxRaw ?? 100);
+
+    // Prefer recalculating when both component marks exist.
+    const hasComponents =
+      internalRaw !== undefined && externalRaw !== undefined;
+
+    const total = hasComponents
+      ? internal + external
+      : Number(totalRaw ?? 0);
+
+    // Flag records where the supplied total disagrees with the sum.
+    const marksTotalConsistent =
+      hasComponents && totalRaw !== undefined
+        ? Number(totalRaw) === total
+        : true;
+
+    // DEMO RULES ONLY: confirm official university rules separately.
+    const thresholdRaw = pick(mark, [
+      "test_pass_threshold", "testPassThreshold"
+    ]);
+
+    const externalThresholdRaw = pick(mark, [
+      "external_pass_threshold", "externalPassThreshold"
+    ]);
+
+    const passThreshold = Number(thresholdRaw ?? 40);
+    const externalThreshold = Number(externalThresholdRaw ?? 20);
+
+    const hasValidMarks =
+      internalRaw !== undefined ||
+      externalRaw !== undefined ||
+      totalRaw !== undefined;
+
+    let grade = "F";
+
+    if (hasValidMarks) {
+      if (total >= 90) grade = "A+";
+      else if (total >= 80) grade = "A";
+      else if (total >= 70) grade = "B";
+      else if (total >= 60) grade = "C";
+      else if (total >= 50) grade = "D";
+      else if (total >= passThreshold) grade = "E";
+    }
+
+    const result = hasValidMarks &&
+      total >= passThreshold &&
+      external >= externalThreshold
+        ? "PASS"
+        : "FAIL";
+
+    return {
+      ...mark,
+      semester: Number(pick(mark, ["semester"]) ?? 1),
+      subjectCode: String(
+        pick(mark, ["subjectCode", "subject_code"]) ?? "—"
+      ),
+      subjectName: String(
+        pick(mark, ["subjectName", "subject_name"]) ??
+        pick(mark, ["subjectCode", "subject_code"]) ??
+        "Subject"
+      ),
+      internal,
+      external,
+      total,
+      maxMarks,
+      grade,
+      result,
+      marksTotalConsistent,
+      marksDataMissing: !hasValidMarks
+    };
+  });
+
+  currentSummaries = rawSummaries.map(summary => ({
+    ...summary,
+    semester: Number(summary.semester),
+    averageMarks: Number(
+      summary.averageMarks ?? summary.average_marks ?? 0
+    ),
+    sgpa: Number(summary.sgpa ?? 0),
+    overallResult:
+      summary.overallResult ??
+      summary.overall_result ??
+      "—"
+  }));
+
+  renderDashboard();
+}
+
+
+/* SHARED N8N POST HELPER */
+
+async function postJSON(path, data) {
+  const response = await fetch(`${API_BASE}/${path}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+
+  let result;
+
+  try {
+    result = await response.json();
+  } catch {
+    throw new Error(
+      `The webhook did not return JSON. HTTP ${response.status}.`
+    );
+  }
+
+  if (!response.ok) {
+    throw new Error(result.message || `HTTP ${response.status}`);
+  }
+
+  return result;
+}
+
+/* WORKFLOW 1 — STUDENT LOGIN */
+
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const hallTicket = $("hallTicket").value.trim().toUpperCase();
+  const pin = $("pin").value.trim();
+  const button = $("loginBtn");
+
+  $("loginMessage").textContent = "";
+  button.disabled = true;
+  button.textContent = "Verifying credentials…";
+
+  try {
+    let data;
+
+    try {
+      data = await postJSON("revalai-login", {
+        hallTicket,
+        pin
+      });
+    } catch (error) {
+      if (!USE_DEMO_FALLBACK) {
+        throw error;
+      }
+
+      const match = hallTicket.match(/^DEMO2026(\d{3})$/);
+      const number = match ? Number(match[1]) : 0;
+
+      if (
+        number < 1 ||
+        number > 30 ||
+        pin !== String(1000 + number)
+      ) {
+        throw new Error("Invalid hall ticket or PIN.");
+      }
+
+      data = {
+        success: true,
+        student: {
+          hallTicket,
+          name: `Demo Student ${number}`
+        },
+        results: buildDemoRecords(number)
+      };
+
+      notify(
+        "Preview mode: demo data is being used because the login webhook could not be reached."
+      );
+    }
+
+    if (!data.success) {
+      throw new Error(data.message || "Login failed.");
+    }
+
+    if (!data.student || !data.results?.marks) {
+      throw new Error(
+        "Login response is missing student or marks data. Check your n8n login workflow response."
+      );
+    }
+
+    setStudentData(data);
+    currentPin = pin;
+
+    $("aiQuestion").value = "";
+    $("aiStatus").textContent = "";
+    $("aiAnswer").textContent = "";
+    $("aiAnswer").classList.add("hidden");
+
+    $("loginPage").classList.add("hidden");
+    $("app").classList.remove("hidden");
+
+    showPage("overview");
+  } catch (error) {
+    $("loginMessage").textContent =
+      error.message || "Unable to sign in.";
+  } finally {
+    button.disabled = false;
+    button.textContent = "Sign in to dashboard ↗";
+  }
+});
+
+/* LOG OUT */
+
+$("logoutBtn").addEventListener("click", () => {
+  currentStudent = null;
+  currentPin = "";
+  currentMarks = [];
+  currentSummaries = [];
+  requests = [];
+
+  $("pin").value = "";
+  $("app").classList.add("hidden");
+  $("loginPage").classList.remove("hidden");
+  $("loginMessage").textContent = "";
+
+  $("requestList").textContent = "No requests submitted yet.";
+  $("aiQuestion").value = "";
+  $("aiAnswer").textContent = "";
+  $("aiAnswer").classList.add("hidden");
+  $("aiStatus").textContent = "";
+});
+
+/* DASHBOARD RENDERING */
+
+function renderDashboard() {
+  const name = currentStudent?.name || "Student";
+  const ticket = currentStudent?.hallTicket || "";
+
+  $("topName").textContent = name;
+  $("topTicket").textContent = ticket;
+  $("profileName").textContent = name;
+  $("profileTicket").textContent = ticket;
+  $("avatar").textContent = name.charAt(0).toUpperCase();
+
+  const validSummaries = currentSummaries.filter(
+    summary => Number.isFinite(summary.sgpa)
+  );
+
+  const averageSGPA = validSummaries.length
+    ? (
+        validSummaries.reduce((sum, summary) => sum + summary.sgpa, 0) /
+        validSummaries.length
+      ).toFixed(2)
+    : "—";
+
+  const averageMarks = currentMarks.length
+    ? (
+        currentMarks.reduce((sum, mark) => sum + mark.total, 0) /
+        currentMarks.length
+      ).toFixed(1)
+    : "—";
+
+  const passed = currentMarks.filter(
+    mark => String(mark.result).toUpperCase() === "PASS"
+  ).length;
+
+  $("statSems").textContent = new Set(
+    currentMarks.map(mark => mark.semester)
+  ).size;
+
+  $("statSgpa").textContent = averageSGPA;
+  $("statAverage").textContent = averageMarks;
+  $("statPassed").textContent = passed;
+  $("statSubjectCount").textContent =
+    `${currentMarks.length} total subjects`;
+
+  $("performanceList").innerHTML = validSummaries.map(summary => `
+    <div style="margin-bottom:17px">
+      <div style="display:flex;justify-content:space-between;gap:10px;font-size:12px">
+        <span>Semester ${summary.semester}</span>
+        <strong class="gold">${summary.sgpa.toFixed(2)} SGPA</strong>
+      </div>
+      <div class="progress">
+        <span style="width:${Math.max(0, Math.min(100, summary.sgpa * 10))}%"></span>
+      </div>
+    </div>
+  `).join("") || `
+    <p class="muted small">No semester summaries available.</p>
+  `;
+
+  const latest = Math.max(
+    0,
+    ...currentSummaries.map(summary => summary.semester)
+  );
+
+  const latestSummary = currentSummaries.find(
+    summary => summary.semester === latest
+  );
+
+  $("latestSummary").innerHTML = latestSummary ? `
+    <div class="mini">
+      <span class="small muted">Semester</span>
+      <b>${latest}</b>
+    </div>
+    <div class="mini">
+      <span class="small muted">SGPA</span>
+      <b>${latestSummary.sgpa.toFixed(2)}</b>
+    </div>
+    <div class="mini">
+      <span class="small muted">Result</span>
+      <b style="font-size:14px">${escapeHTML(latestSummary.overallResult)}</b>
+    </div>
+  ` : `
+    <div class="muted small">No semester summary available.</div>
+  `;
+
+  renderSemesterButtons();
+  renderMarks();
+  renderRevaluation();
+  renderRequests();
+}
+
+/* SEMESTER BUTTONS */
+
+function renderSemesterButtons() {
+  $("semesterButtons").innerHTML = Array.from(
+    { length: 6 },
+    (_, index) => index + 1
+  ).map(semester => `
+    <button
+      class="sem-btn ${selectedSemester === semester ? "active" : ""}"
+      data-sem="${semester}"
+      type="button"
+    >
+      Semester ${semester}
+    </button>
+  `).join("");
+
+  $("semesterButtons").querySelectorAll("button").forEach(button => {
+    button.addEventListener("click", () => {
+      selectedSemester = Number(button.dataset.sem);
+      renderSemesterButtons();
+      renderMarks();
+    });
+  });
+
+  $("revalSemesterButtons").innerHTML = Array.from(
+    { length: 6 },
+    (_, index) => index + 1
+  ).map(semester => `
+    <button
+      class="sem-btn ${revalSemester === semester ? "active" : ""}"
+      data-reval-sem="${semester}"
+      type="button"
+    >
+      Semester ${semester}
+    </button>
+  `).join("");
+
+  $("revalSemesterButtons").querySelectorAll("button").forEach(button => {
+    button.addEventListener("click", () => {
+      revalSemester = Number(button.dataset.revalSem);
+      renderRevaluation();
+    });
+  });
+}
+
+/* SUBJECT MARKS TABLE */
+
+function renderMarks() {
+  const records = currentMarks.filter(
+    mark => mark.semester === selectedSemester
+  );
+
+  const summary = currentSummaries.find(
+    item => item.semester === selectedSemester
+  );
+
+  $("semesterInfo").innerHTML = `
+    <div class="mini">
+      <span class="small muted">Average marks</span>
+      <b>${summary ? summary.averageMarks : "—"}</b>
+    </div>
+    <div class="mini">
+      <span class="small muted">SGPA</span>
+      <b>${summary ? Number(summary.sgpa).toFixed(2) : "—"}</b>
+    </div>
+    <div class="mini">
+      <span class="small muted">Result</span>
+      <b style="font-size:14px">${escapeHTML(summary?.overallResult || "—")}</b>
+    </div>
+  `;
+
+  $("marksCount").textContent = `${records.length} subjects`;
+
+  $("marksBody").innerHTML = records.length
+    ? records.map(mark => `
+      <tr>
+        <td>
+          <strong>${escapeHTML(mark.subjectName)}</strong>
+          <div class="small muted" style="margin-top:4px">
+            ${escapeHTML(mark.subjectCode)}
+          </div>
+        </td>
+        <td>${mark.internal}</td>
+        <td>${mark.external}</td>
+        <td><strong>${mark.total}/${mark.maxMarks || 100}</strong></td>
+        <td class="grade">${escapeHTML(mark.grade)}</td>
+        <td>
+          <span class="status ${
+            String(mark.result).toUpperCase() === "PASS" ? "pass" : "fail"
+          }">
+            ${escapeHTML(mark.result)}
+          </span>
+        </td>
+      </tr>
+    `).join("")
+    : `
+      <tr>
+        <td colspan="6" class="muted">No marks available for this semester.</td>
+      </tr>
+    `;
+}
+
+/* REVALUATION UI */
+
+function renderRevaluation() {
+  const records = currentMarks.filter(
+    mark => mark.semester === revalSemester
+  );
+
+  const selected = new Set(
+    [...document.querySelectorAll(".subject-select:checked")]
+      .map(element => element.value)
+  );
+
+  const validSelected = new Set(
+    [...selected].filter(code =>
+      records.some(mark => mark.subjectCode === code)
+    )
+  );
+
+  $("revalBody").innerHTML = records.map(mark => `
+    <tr>
+      <td>
+        <input
+          class="subject-select"
+          type="checkbox"
+          value="${escapeHTML(mark.subjectCode)}"
+          aria-label="Select ${escapeHTML(mark.subjectName)}"
+          ${validSelected.has(mark.subjectCode) ? "checked" : ""}
+        >
+      </td>
+      <td>
+        <strong>${escapeHTML(mark.subjectName)}</strong>
+        <div class="small muted" style="margin-top:4px">
+          ${escapeHTML(mark.subjectCode)}
+        </div>
+      </td>
+      <td>${mark.total}/${mark.maxMarks || 100}</td>
+      <td class="grade">${escapeHTML(mark.grade)}</td>
+      <td>
+        <span class="status ${
+          String(mark.result).toUpperCase() === "PASS" ? "pass" : "fail"
+        }">
+          ${escapeHTML(mark.result)}
+        </span>
+      </td>
+    </tr>
+  `).join("") || `
+    <tr>
+      <td colspan="5" class="muted">No subjects available.</td>
+    </tr>
+  `;
+
+  $("revalBody").querySelectorAll(".subject-select").forEach(element => {
+    element.addEventListener("change", updateFee);
+  });
+
+  updateFee();
+}
+
+function updateFee() {
+  const count = document.querySelectorAll(
+    ".subject-select:checked"
+  ).length;
+
+  $("selectedCount").textContent = `${count} selected`;
+
+  $("feeTotal").textContent =
+    `₹${(count * DEMO_FEE_PER_SUBJECT).toLocaleString("en-IN")}`;
+
+  $("submitReval").disabled = count === 0;
+}
+
+/* OPTIONAL REVALUATION WEBHOOK */
+
+$("submitReval").addEventListener("click", async () => {
+  const subjects = [
+    ...document.querySelectorAll(".subject-select:checked")
+  ].map(element => element.value);
+
+  if (!subjects.length) {
+    notify("Select at least one subject.");
+    return;
+  }
+
+  const estimatedFee = subjects.length * DEMO_FEE_PER_SUBJECT;
+
+  const confirmed = confirm(
+    `Submit a DEMO request for ${subjects.length} subject(s)? ` +
+    `Estimated demo fee: ₹${estimatedFee}. ` +
+    `This does not make a payment or submit an official university form.`
+  );
+
+  if (!confirmed) return;
+
+  $("submitReval").disabled = true;
+
+  try {
+    const payload = {
+      hallTicket: currentStudent.hallTicket,
+      semester: revalSemester,
+      subjects,
+      fee: estimatedFee
+    };
+
+    let result;
+
+    try {
+      result = await postJSON("revalai-revaluation", payload);
+    } catch (error) {
+      if (!USE_DEMO_FALLBACK) throw error;
+
+      result = {
+        success: true,
+        requestId: `DEMO-REV-${Date.now()}`,
+        fee: estimatedFee,
+        status: "PENDING_REVIEW"
+      };
+
+      notify(
+        "Preview mode: this request was not saved to n8n."
+      );
+    }
+
+    if (!result.success) {
+      throw new Error(result.message || "Request failed.");
+    }
+
+    requests.unshift({
+      id: result.requestId || `DEMO-${Date.now()}`,
+      semester: revalSemester,
+      subjects,
+      fee: result.fee ?? estimatedFee,
+      status: result.status || "PENDING_REVIEW"
+    });
+
+    renderRequests();
+
+    notify(`Request reference: ${requests[0].id}`);
+
+    document.querySelectorAll(".subject-select").forEach(element => {
+      element.checked = false;
+    });
+
+    updateFee();
+
+  } catch (error) {
+    notify(error.message || "Unable to submit request.");
+  } finally {
+    $("submitReval").disabled = false;
+  }
+});
+
+function renderRequests() {
+  $("requestList").innerHTML = requests.length
+    ? requests.map(request => `
+      <div class="mini" style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <strong>${escapeHTML(request.id)}</strong>
+          <span class="status pending">${escapeHTML(request.status)}</span>
+        </div>
+        <div class="muted small" style="margin-top:8px">
+          Semester ${request.semester} ·
+          ${request.subjects.map(escapeHTML).join(", ")}
+        </div>
+        <div class="gold" style="margin-top:8px">
+          Demo fee: ₹${Number(request.fee).toLocaleString("en-IN")}
+        </div>
+      </div>
+    `).join("")
+    : "No requests submitted yet.";
+}
+
+/* WORKFLOW 2 — AI RESULT ASSISTANT */
+
+$("askAiBtn").addEventListener("click", async () => {
+  const question = $("aiQuestion").value.trim();
+  const button = $("askAiBtn");
+
+  if (!currentStudent || !currentPin) {
+    $("aiStatus").textContent =
+      "Please log in again before asking a question.";
+    return;
+  }
+
+  if (!question) {
+    $("aiStatus").textContent =
+      "Please type a question first.";
+    $("aiQuestion").focus();
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Thinking…";
+  $("aiStatus").textContent =
+    "RevalAI is preparing your answer…";
+  $("aiAnswer").classList.add("hidden");
+
+  try {
+    const result = await postJSON("revalai-assistant", {
+      hallTicket: currentStudent.hallTicket,
+      pin: currentPin,
+      question
+    });
+
+    if (!result.success) {
+      throw new Error(
+        result.message || "The AI assistant could not answer."
+      );
+    }
+
+    $("aiAnswer").textContent =
+      result.answer || result.output || "No answer was returned.";
+
+    $("aiAnswer").classList.remove("hidden");
+
+    $("aiStatus").textContent =
+      "Answer received. This demo uses synthetic records, not official university results.";
+
+  } catch (error) {
+    $("aiStatus").textContent =
+      "AI request failed: " +
+      (error.message || "Unknown error") +
+      ". Check that the AI Result Assistant workflow is active and its webhook path is revalai-assistant.";
+
+  } finally {
+    button.disabled = false;
+    button.textContent = "Ask RevalAI ↗";
+  }
+});
+currentMarks = currentMarks.map(mark => {
+  const pick = (...keys) => {
+    for (const key of keys) {
+      if (
+        mark[key] !== undefined &&
+        mark[key] !== null &&
+        mark[key] !== ""
+      ) {
+        return mark[key];
+      }
+    }
+    return undefined;
+  };
+
+  const internal = Number(
+    pick("internal", "internal_marks", "internalMarks") ?? 0
+  );
+
+  const external = Number(
+    pick("external", "external_marks", "externalMarks") ?? 0
+  );
+
+  const suppliedTotal = Number(
+    pick(
+      "calculated_total",
+      "calculatedTotal",
+      "total",
+      "total_marks",
+      "totalMarks"
+    ) ?? 0
+  );
+
+  // Use internal + external if the supplied total is zero
+  // but the individual marks are available.
+  const total =
+    suppliedTotal > 0
+      ? suppliedTotal
+      : internal + external;
+
+  const maxMarks = Number(
+    pick("maxMarks", "max_marks") ?? 100
+  );
+
+  // DEMO grading rules only — replace with official rules
+  // when you know your university's actual grading scheme.
+  let grade;
+
+  if (total >= 90) grade = "A+";
+  else if (total >= 80) grade = "A";
+  else if (total >= 70) grade = "B";
+  else if (total >= 60) grade = "C";
+  else if (total >= 50) grade = "D";
+  else if (total >= 40) grade = "E";
+  else grade = "F";
+
+  // DEMO pass rule: total >= 40 and external >= 20.
+  const result =
+    total >= 40 && external >= 20
+      ? "PASS"
+      : "FAIL";
+
+  return {
+    ...mark,
+    semester: Number(pick("semester") ?? 1),
+    subjectCode: String(
+      pick("subjectCode", "subject_code") ?? "—"
+    ),
+    subjectName: String(
+      pick("subjectName", "subject_name") ??
+      pick("subjectCode", "subject_code") ??
+      "Subject"
+    ),
+    internal,
+    external,
+    total,
+    maxMarks,
+    grade,
+    result
+  };
+});
+/*
+  DEMO ACCOUNT PATTERN
+
+  Hall tickets: DEMO2026001 through DEMO2026030
+  PINs:         1001 through 1030
+
+  The data is synthetic and generated in the browser only when the
+  login webhook fails and USE_DEMO_FALLBACK is true.
+
+  Change USE_DEMO_FALLBACK to false when you want login/API errors
+  to appear rather than using browser-generated demo records.
+*/
+</script>
+</body>
+</html>
