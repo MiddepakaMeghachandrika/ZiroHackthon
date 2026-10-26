@@ -1,0 +1,94 @@
+{
+  "name": "RevalAI",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "revalai-login",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2a7a1a52-ed5d-44b7-a000-1f5e82102a0a",
+      "name": "Webhook",
+      "webhookId": "27280033-7136-4a3d-b100-d3c30d3caef5"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "f04ccedd-3d94-493f-98f2-26570537ab59",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst body = $('Webhook').first().json.body ?? {};\n\n// Generate 30 demo students, each with semesters 1–6\nconst students = Array.from({ length: 30 }, (_, i) => {\n  const number = i + 1;\n  const hallTicket = `DEMO2026${String(number).padStart(3, '0')}`;\n\n  return {\n    hallTicket,\n    name: `Demo Student ${number}`,\n    pin: String(1000 + number)\n  };\n});\n\nconst hallTicket = String(body.hallTicket ?? '')\n  .trim()\n  .toUpperCase();\n\nconst pin = String(body.pin ?? '').trim();\n\nif (!hallTicket || !pin) {\n  return [{\n    json: {\n      success: false,\n      message: 'Hall ticket and PIN are required'\n    }\n  }];\n}\n\nconst student = students.find(\n  s => s.hallTicket === hallTicket && s.pin === pin\n);\n\nif (!student) {\n  return [{\n    json: {\n      success: false,\n      message: 'Invalid hall ticket or PIN'\n    }\n  }];\n}\n\n// Synthetic demo subjects; replace with verified marks data later.\nconst subjects = [\n  { code: '01', name: 'Programming' },\n  { code: '02', name: 'Mathematics' },\n  { code: '03', name: 'Database Systems' },\n  { code: '04', name: 'Computer Networks' },\n  { code: '05', name: 'Operating Systems' }\n];\n\nconst marks = [];\n\nfor (let sem = 1; sem <= 6; sem++) {\n  for (let j = 0; j < subjects.length; j++) {\n    // Deterministic sample marks for the demo\n    const internal = 15 + ((student.hallTicket.length + sem + j * 3) % 11);\n    const external = 25 + ((Number(student.hallTicket.slice(-3)) + sem * 7 + j * 9) % 51);\n    const total = internal + external;\n\n    marks.push({\n      semester: sem,\n      subjectCode: `S${sem}${subjects[j].code}`,\n      subjectName: subjects[j].name,\n      internalMarks: internal,\n      externalMarks: external,\n      totalMarks: total,\n      maxMarks: 100,\n      grade: total >= 90 ? 'A+' :\n             total >= 80 ? 'A' :\n             total >= 70 ? 'B' :\n             total >= 60 ? 'C' :\n             total >= 50 ? 'D' : 'F',\n      result: total >= 40 ? 'PASS' : 'FAIL'\n    });\n  }\n}\n\nconst summaries = Array.from({ length: 6 }, (_, index) => {\n  const semester = index + 1;\n  const semesterMarks = marks.filter(m => m.semester === semester);\n  const average = semesterMarks.reduce(\n    (sum, m) => sum + m.totalMarks, 0\n  ) / semesterMarks.length;\n\n  return {\n    semester,\n    subjectCount: semesterMarks.length,\n    averageMarks: Number(average.toFixed(2)),\n    sgpa: Number((average / 10).toFixed(2)),\n    result: semesterMarks.every(m => m.result === 'PASS')\n      ? 'PASS'\n      : 'CHECK RESULTS'\n  };\n});\n\nreturn [{\n  json: {\n    success: true,\n    message: 'Login successful',\n    student: {\n      hallTicket: student.hallTicket,\n      name: student.name\n    },\n    results: {\n      marks,\n      summaries\n    }\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "58b1d048-b504-45a8-98d3-044fcbb314be",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "601054a7-919b-4ec0-9697-5eeae2544d73",
+  "meta": {
+    "instanceId": "fe859bbda79e2e0b2c556f02bc4b111af857cb663bcaa8eeccff744293c88e7a"
+  },
+  "id": "WNHYSZZXSBzMf543",
+  "tags": []
+}

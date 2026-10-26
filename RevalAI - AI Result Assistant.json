@@ -1,0 +1,212 @@
+{
+  "name": "RevalAI - AI Result Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "revalai-assistant",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "290e40c9-abf3-4a6f-b21f-8e6cebcb4365",
+      "name": "Webhook",
+      "webhookId": "c978a969-060c-49a2-8ca1-f2c3e904d469"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst body = $('Webhook').first().json.body ?? {};\n\nconst hallTicket = String(body.hallTicket ?? '')\n  .trim()\n  .toUpperCase();\n\nconst pin = String(body.pin ?? '').trim();\nconst question = String(body.question ?? '').trim();\n\nif (!hallTicket || !pin || !question) {\n  return [{\n    json: {\n      valid: false,\n      message: 'Hall ticket, PIN and question are required.'\n    }\n  }];\n}\n\nconst match = hallTicket.match(/^DEMO2026(\\d{3})$/);\nconst number = match ? Number(match[1]) : 0;\nconst expectedPin = String(1000 + number);\n\nif (!match || number < 1 || number > 30 || pin !== expectedPin) {\n  return [{\n    json: {\n      valid: false,\n      message: 'Invalid hall ticket or PIN.'\n    }\n  }];\n}\n\nconst subjects = [\n  'Programming',\n  'Mathematics',\n  'Database Systems',\n  'Computer Networks',\n  'Operating Systems'\n];\n\nconst marks = [];\n\nfor (let sem = 1; sem <= 6; sem++) {\n  for (let j = 0; j < subjects.length; j++) {\n    const internal = 15 + ((hallTicket.length + sem + j * 3) % 11);\n    const external = 25 + ((number + sem * 7 + j * 9) % 51);\n    const total = internal + external;\n\n    marks.push({\n      semester: sem,\n      subjectCode: `S${sem}0${j + 1}`,\n      subjectName: subjects[j],\n      internalMarks: internal,\n      externalMarks: external,\n      totalMarks: total,\n      maxMarks: 100,\n      result: total >= 40 ? 'PASS' : 'FAIL'\n    });\n  }\n}\n\nconst agentInput = `\nYou are RevalAI, a student-friendly academic result assistant.\n\nStudent: Demo Student ${number}\nHall ticket: ${hallTicket}\nQuestion: ${question}\n\nDemo result records:\n${JSON.stringify(marks)}\n\nRules:\n- Answer only from the supplied records.\n- Explain marks clearly and mention semester and subject.\n- Never invent official grades, revaluation deadlines, fees, or eligibility.\n- These are synthetic demo marks, not official university results.\n- If the requested information is unavailable, say so.\n- Be concise and helpful.\n`;\n\nreturn [{\n  json: {\n    valid: true,\n    hallTicket,\n    studentName: `Demo Student ${number}`,\n    question,\n    agentInput\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "5c59b1b1-5742-4cb1-95a0-e6cf10281047",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "462e48b5-0e28-4f7a-93ed-e2cf7315145c",
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "681d61eb-c8ce-448e-bab7-82b0884b62e1",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.agentInput }}",
+        "options": {
+          "systemMessage": "You are RevalAI, a helpful academic result assistant.\nUse only the supplied student result data.\nNever invent marks, official deadlines, fees, or revaluation eligibility.\nClearly state when information is unavailable.\nThese are synthetic demo records, not official results.\nKeep answers concise and student-friendly."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        624,
+        -96
+      ],
+      "id": "9cfe5e07-1e37-4473-b745-4e3196a58029",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  success: true,\n  answer: $json.output\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        976,
+        -96
+      ],
+      "id": "10518638-4f15-4cfd-8e35-51825fe3aba4",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  success: false,\n  message: $json.message || 'Invalid hall ticket or PIN.'\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        768,
+        240
+      ],
+      "id": "ac3789f7-dfd2-4d38-a3e8-44a41221df28",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3-flash-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        656,
+        112
+      ],
+      "id": "0782f36a-067f-4b90-a46e-8771c20d035c",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "58GCorsBCbpqirAZ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6e911e1a-1901-4929-9731-f8587672139b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fe859bbda79e2e0b2c556f02bc4b111af857cb663bcaa8eeccff744293c88e7a"
+  },
+  "id": "Muq2DWbeiO2TJwDk",
+  "tags": []
+}
